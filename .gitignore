@@ -1,0 +1,32 @@
+# ─── Python caches and compiled files ──────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ─── Virtual environments & env files ──────────────────────────────────────
+myenv/
+.env
+.venv/
+
+# ─── macOS Finder files ────────────────────────────────────────────────────
+.DS_Store
+
+# ─── Streamlit cache & logs ────────────────────────────────────────────────
+.streamlit/
+
+# ─── IDE/editor settings ───────────────────────────────────────────────────
+.vscode/
+.idea/
+
+# ─── Large data & dataset ──────────────────────────────────────────────────
+Dataset/
+
+# ─── Segmentation intermediate outputs ────────────────────────────────────
+Segmentation/**/block_outputs/
+Segmentation/Hybrid_segmentation/overlays/
+
+# ─── UI generated results ──────────────────────────────────────────────────
+UI/classification_results.json
+
+# ─── Logs ─────────────────────────────────────────────────────────────────
+*.log
