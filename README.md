@@ -12,34 +12,21 @@ It supports three segmentation methods (XY‑Cut, DocStrum, Hybrid) with LightGB
 * We pull sample images for inference only in `UI/test_images/`.
 * **Full dataset** is large (∼28 GB) and should be downloaded separately if you need to train or evaluate on the full set.
 
-## 3. Requirements
-
-Install Python packages via:
-
-```bash
-pip install -r requirements.txt
-```
-
-Contents of `requirements.txt`:
-
-```
-opencv-python
-matplotlib
-torchvision
-streamlit
-joblib
-scikit-learn
-tqdm
-lightgbm
-huggingface_hub
-```
-
-## 4. Saved Models
+## 3. Saved Models
 
 * **LightGBM** (`.pkl`, < 100 MB): included in repo under `Classification/`.
 * **Faster R‑CNN** (`.pth`, > 100 MB): hosted on Hugging Face at
   [`https://huggingface.co/pmodi08/DocVision-Models`](https://huggingface.co/pmodi08/DocVision-Models)
 * The code automatically downloads them at runtime using `huggingface_hub`.
+
+## 4. Setup & Clone Repo
+
+To get started:
+
+```bash
+git clone https://github.com/Prahar08modi/DocVision.git
+cd DocVision
+```
 
 ## 5. Docker Container (Preferred)
 
@@ -68,36 +55,48 @@ huggingface_hub
 
 If you prefer not to use Docker, you can run locally:
 
-1. **Clone** this repo:
-
-   ```bash
-   git clone https://github.com/Prahar08modi/DocVision.git
-   cd DocVision
-   ```
-2. **Install** dependencies:
+1. **Install** dependencies:
 
    ```bash
    pip install -r requirements.txt
    ```
-3. **Run** Streamlit:
+   Contents of `requirements.txt`:
+
+    ```
+    opencv-python
+    matplotlib
+    torchvision
+    streamlit
+    joblib
+    scikit-learn
+    tqdm
+    lightgbm
+    huggingface_hub
+    ```
+
+2. **Run** Streamlit:
 
    ```bash
    streamlit run UI/app_dl.py \
      --server.fileWatcherType none \
      --server.port 8501
    ```
-4. **Use**
+3. **Use**
 
    * Upload an image (PNG/JPG).
    * Click **Next: Classify zones** to run LightGBM.
    * Expand “🚀 Try Faster R‑CNN” and check **Run Faster R‑CNN**.
 
-## 7. Reproduce Report Results
+### LightGBM Classification Flowchart
 
-> **TO BE COMPLETED BY RUTVIK**
-> Please insert exact step‑by‑step commands and expected output/metrics here to match the project report.
+Below is the flowchart summarizing the LightGBM classification pipeline used in DocVision:
 
-## 8. Training the Models
+![LightGBM Classification Flowchart](Assets/lightgbm_classification_flowchart.png)
+
+**Description:**
+This flowchart illustrates how each scanned document image flows through: binarization, segmentation (XY‑Cut, DocStrum, or Hybrid), feature extraction (text density, edge count, geometric and statistical features), classification via the trained LightGBM model, and finally overlaying the predicted categories on the original image for visualization.
+
+## (Optional) Training the Models
 
 In case inference fails, you can retrain your models:
 
