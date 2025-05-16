@@ -9,7 +9,7 @@ It supports three segmentation methods (XY‑Cut, DocStrum, Hybrid) with LightGB
 
 * **DocLayNet Core & Extra** (COCO format)
 * **Link**: [DocLayNet](https://github.com/DS4SD/DocLayNet)
-* We pull sample images for inference only in `UI/test_images/`.
+* We pull sample images for inference only in `Segmentation/test_images/`.
 * **Full dataset** is large (∼28 GB) and should be downloaded separately if you need to train or evaluate on the full set.
 
 ## 3. Saved Models
@@ -42,6 +42,9 @@ cd DocVision
      -p 8501:8501 \
      docvision:latest
    ```
+
+   The streamlit UI will be hosted at [http://localhost:8501](http://localhost:8501)
+
 3. **Persist** HF cache between runs (optional):
 
    ```bash
@@ -50,6 +53,8 @@ cd DocVision
      -v ~/.cache/huggingface:/root/.cache/huggingface \
      docvision:latest
    ```
+
+    The streamlit UI will be hosted at [http://localhost:8501](http://localhost:8501)
 
 ## 6. Inference UI (Local Alternative)
 
@@ -81,9 +86,12 @@ If you prefer not to use Docker, you can run locally:
      --server.fileWatcherType none \
      --server.port 8501
    ```
+
+    The streamlit UI will be hosted at [http://localhost:8501](http://localhost:8501)
+
 3. **Use**
 
-   * Upload an image (PNG/JPG).
+   * Upload an image (PNG/JPG). Sample test images can be found under `Segmentation/test_images`
    * Click **Next: Classify zones** to run LightGBM.
    * Expand “🚀 Try Faster R‑CNN” and check **Run Faster R‑CNN**.
 
@@ -98,14 +106,18 @@ This flowchart illustrates how each scanned document image flows through: binari
 
 ## (Optional) Training the Models
 
-In case inference fails, you can retrain your models:
+If you want to retrain your classification models:
 
-1. **Prepare** your own subset of DocLayNet (COCO JSON + images).
+1. **Prepare** your own subset of DocLayNet (COCO JSON + images). 
+    - Download DocLayNet_Core from [DocLayNet_Core](https://codait-cos-dax.s3.us.cloud-object-storage.appdomain.cloud/dax-doclaynet/1.0.0/DocLayNet_core.zip)
+    - Store it under Dataset directory under Project Root folder.
+
 2. **Train LightGBM**:
 
    ```bash
-   cd Classification
+   cd Train
    python train_lightgbm.py \
+     --device cpu/gpu
      --coco-json path/to/train.json \
      --image-dir path/to/images \
      --output updated_lightgbm_doclaynet.pkl
@@ -114,9 +126,8 @@ In case inference fails, you can retrain your models:
 
    ```bash
    cd Deep_Learning/FasterRCNN
-   python train_fastrcnn.py \
-     --train-json path/to/train.json \
-     --val-json path/to/val.json \
-     --output fasterrcnn_doclaynet.pth
    ```
+
+   Run the Jupyter Notebook: `fasterRCNN.ipynb`
+
 4. **Upload** any newly trained weights to Hugging Face as needed.
