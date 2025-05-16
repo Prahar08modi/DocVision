@@ -5,6 +5,8 @@
 DocVision is a Streamlit‐based inference UI for document layout analysis.
 It supports three segmentation methods (XY‑Cut, DocStrum, Hybrid) with LightGBM classification and an Faster R‑CNN detector.
 
+- [Project Report](Group8_Project_Report.pdf)
+
 ## 2. Dataset
 
 * **DocLayNet Core & Extra** (COCO format)
