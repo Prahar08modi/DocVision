@@ -21,6 +21,9 @@ myenv/
 # ─── Large data & dataset ──────────────────────────────────────────────────
 Dataset/
 
+# Model weights (will be hosted externally)
+Deep_Learning/**/*.pth
+
 # ─── Segmentation intermediate outputs ────────────────────────────────────
 Segmentation/**/block_outputs/
 Segmentation/Hybrid_segmentation/overlays/
