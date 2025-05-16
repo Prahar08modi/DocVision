@@ -1,0 +1,15 @@
+# ─── exclude dataset & environment ─────────────────────────────────
+Dataset/
+myenv/
+
+# ─── exclude local model‐checkpoints (we pull .pth at runtime) ──────
+Deep_Learning/**/*.pth
+
+# ─── macOS cruft & editor caches ────────────────────────────────────
+.DS_Store
+**/__pycache__/
+*.py[cod]
+
+# ─── git metadata ───────────────────────────────────────────────────
+.git
+.gitignore

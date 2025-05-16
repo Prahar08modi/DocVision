@@ -1,0 +1,9 @@
+opencv-python
+matplotlib
+torchvision
+streamlit
+joblib
+scikit-learn
+tqdm
+lightgbm
+huggingface_hub
