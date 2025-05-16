@@ -19,13 +19,6 @@ import torch
 import torchvision
 from torchvision.transforms import functional as F
 
-# ─── fix PYTHONPATH to see your segmentation packages ───────────────
-# HERE = os.path.dirname(__file__)                                       # …/Segmentation/New_style/UI
-# SEG_ROOT = os.path.abspath(os.path.join(HERE, ".."))                   # …/Segmentation/New_style
-# DOCVISION_ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..")) # …/Project/DocVision
-# for pkg in ("Recursive_xycut", "Docstrum", "Hybrid_segmentation"):
-#     sys.path.insert(0, os.path.join(SEG_ROOT, pkg))
-
 # ─── add project root to path ─────────────────────────────────────
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if ROOT not in sys.path:
@@ -41,6 +34,7 @@ from Segmentation.Docstrum.docstrum_geometry import (
 from Segmentation.Docstrum.docstrum_lines import build_docstrum_lines, clusters_to_boxes
 from Segmentation.Docstrum.docstrum_dynamic_morph_blocks import dynamic_morphological_merge
 from Segmentation.Hybrid_segmentation.hybrid_segmentation import hybrid_segment_page
+from Deep_Learning.model_loader import load_fastrcnn_model
 
 # ─── full COCO ID→name map (DocLayNet categories) ────────────────────
 CATEGORY_MAP = {
@@ -70,7 +64,6 @@ seg_args = SimpleNamespace(
 
 # ─── model paths ───────────────────────────────────────────────────
 PKL_PATH  = os.path.join(ROOT,    "Classification", "lightgbm_doclaynet.pkl")
-RCNN_PATH = os.path.join(ROOT, "Deep_Learning",  "fasterrcnn_doclaynet.pth")
 
 # ─── segmentation helpers ──────────────────────────────────────────
 def docstrum_segment_page(gray, binary, args):
@@ -138,16 +131,6 @@ def draw_boxes_with_preds(img, boxes, preds, palette, label_map):
         cv2.putText(out, txt, (x0, y0-5),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, col, 1)
     return out
-
-@st.cache_resource(show_spinner=False)
-def load_fastrcnn_model(path, num_classes):
-    model = torchvision.models.detection.fasterrcnn_resnet50_fpn(
-        pretrained=False, num_classes=num_classes
-    )
-    state = torch.load(path, map_location="cpu")
-    model.load_state_dict(state)
-    model.eval()
-    return model
 
 # ─── Streamlit UI ───────────────────────────────────────────────────
 st.title("DocVision Inference Pipeline")
@@ -279,9 +262,13 @@ with st.expander("🚀 Try Faster R‑CNN"):
     if st.checkbox("Run Faster R‑CNN"):
         try:
             num_cls = max(CATEGORY_MAP.keys()) + 1
-            model   = load_fastrcnn_model(RCNN_PATH, num_classes=num_cls)
+            model = load_fastrcnn_model(
+            repo_id="pmodi08/DocVision-Models",
+            filename="fasterrcnn_doclaynet.pth",
+            num_classes=max(CATEGORY_MAP.keys()) + 1
+        )
         except FileNotFoundError:
-            st.error(f"Checkpoint not found at:\n{RCNN_PATH}")
+            st.error(f"Checkpoint not found")
         else:
             thresh = st.slider("Score threshold", 0.0, 1.0, 0.5)
             tensor = F.to_tensor(arr_rgb)
